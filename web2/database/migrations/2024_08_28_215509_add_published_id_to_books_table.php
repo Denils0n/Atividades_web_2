@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('books', function (Blueprint $table) {
-            $table->integer('published_year')->nullable();
+            $table->unsignedBigInteger('publisher_id')->nullable();
+            $table->foreign('publisher_id')->references('id')->on('publishers')->onDelete('set null');
         });
     }
 
@@ -22,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('books', function (Blueprint $table) {
-            $table->dropColumn('published_year');
+            $table->dropColumn('publisher_id');
         });
     }
 };

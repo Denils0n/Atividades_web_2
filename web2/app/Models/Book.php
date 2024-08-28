@@ -2,23 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
-    use HasFactory;
-
-    protected $fillable = ['title', 'author_id', 'category_id', 'published_year'];
+    // Campos que podem ser atribuídos em massa
+    protected $fillable = ['title', 'author_id', 'publisher_id', 'published_year'];
 
     public function author()
     {
         return $this->belongsTo(Author::class);
     }
 
-    public function category()
+    public function publisher()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(publisher::class);
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
 }
+
+
