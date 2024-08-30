@@ -6,7 +6,9 @@ use App\Models\Book;
 use App\Models\Author;
 use App\Models\Publisher;
 use App\Models\Category;
+use Illuminate\Container\Attributes\Storage;
 use Illuminate\Http\Request;
+use Whoops\Run;
 
 class BookController extends Controller
 {
@@ -36,17 +38,41 @@ class BookController extends Controller
     // Função para armazenar um novo livro no banco de dados
     public function store(Request $request)
     {
+        // Validação dos dados do formulário
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'author_id' => 'required|integer',
             'publisher_id' => 'required|integer',
             'published_year' => 'required|integer',
             'categories' => 'required|array',
+            
+            'images' => 'required',
         ]);
+    
+        // Verificar e processar o upload da imagem, se presente
+        
+        $imagePath = null;
 
+ 
+        $name = uniqid(date('HisYmd'));
+        $extension = $request->images->getClientOriginalExtension();
+        $nameFile = "{$name}.{$extension}";
+        $imagePath = $request->images->storeAs('imagens', $nameFile, 'public');
+        
+        if (!$imagePath) {
+            
+            return redirect()->back()->with('error', 'Falha no upload da imagem.')->withInput();
+        }
+
+    
+        // Adiciona o caminho da imagem aos dados validados, se houver
+        $validatedData['images'] = $imagePath;
+    
+        // Cria o livro com os dados validados
         $book = Book::create($validatedData);
+    
         $book->categories()->attach($request->categories);
-
+    
         return redirect()->route('books.index')->with('success', 'Livro criado com sucesso!');
     }
 
@@ -69,19 +95,39 @@ class BookController extends Controller
             'publisher_id' => 'required|integer',
             'published_year' => 'required|integer',
             'categories' => 'required|array',
+            
+            'images' => 'required',
         ]);
+                
+        $imagePath = null;
+        var_dump($request->images);
+        $name = uniqid(date('HisYmd'));
+        $extension = $request->images->getClientOriginalExtension();
+        $nameFile = "{$name}.{$extension}";
+        $imagePath = $request->images->storeAs('imagens', $nameFile, 'public');
+        
+        if (!$imagePath) {
+            
+            return redirect()->back()->with('error', 'Falha no upload da imagem.')->withInput();
+        }
+
+    
+        // Adiciona o caminho da imagem aos dados validados, se houver
+        $validatedData['images'] = $imagePath;
 
         $book = Book::findOrFail($id);
         $book->update($validatedData);
-        $book->categories()->sync($request->categories);
-
-        return redirect()->route('books.index')->with('success', 'Livro atualizado com sucesso!');
+        
+        $book->categories()->attach($request->categories);
+    
+        return redirect()->route('books.index')->with('success', 'Livro criado com sucesso!');
     }
 
     // Função para excluir um livro do banco de dados
     public function destroy($id)
     {
         $book = Book::findOrFail($id);
+        Storage::delete('storage/' . $book->images);
         $book->categories()->detach();
         $book->delete();
 

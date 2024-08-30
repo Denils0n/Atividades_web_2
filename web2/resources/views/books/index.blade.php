@@ -10,6 +10,7 @@
                     <th>Título</th>
                     <th>Autor</th>
                     <th>Editora</th>
+                    <th>Imagens</th>
                     <th>Categorias</th>
                     <th>Ações</th>
                 </tr>
@@ -20,6 +21,12 @@
                         <td>{{ $book->title }}</td>
                         <td>{{ $book->author->name }}</td>
                         <td>{{ $book->publisher->name }}</td>
+                        
+                        <td> <img src="{{ asset('storage/' . $book->images) }}" alt="Imagem do Livro" width="100"></td>
+                        
+
+                        
+
                         <td>
                             @foreach ($book->categories as $category)
                                 <span class="badge bg-secondary">{{ $category->name }}</span>

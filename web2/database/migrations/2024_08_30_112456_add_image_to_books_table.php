@@ -1,5 +1,6 @@
 <?php
 
+use GuzzleHttp\Psr7\DroppingStream;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,8 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('books', function (Blueprint $table) {
-            
-            $table->foreign('publisher_id')->references('id')->on('publishers')->onDelete('set null');
+            $table->string('images');
         });
     }
 
@@ -23,8 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('books', function (Blueprint $table) {
-            $table->dropForeign(['publisher_id']);
-            
+            $table->dropColumn('images');
         });
     }
 };
