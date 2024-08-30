@@ -6,9 +6,8 @@ use App\Models\Book;
 use App\Models\Author;
 use App\Models\Publisher;
 use App\Models\Category;
-use Illuminate\Container\Attributes\Storage;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-use Whoops\Run;
 
 class BookController extends Controller
 {
@@ -127,7 +126,12 @@ class BookController extends Controller
     public function destroy($id)
     {
         $book = Book::findOrFail($id);
-        Storage::delete('storage/' . $book->images);
+        $book_image = "public/" . $book->images;
+        
+        if (Storage::exists($book_image)) {
+
+            Storage::delete($book_image);
+        }
         $book->categories()->detach();
         $book->delete();
 
