@@ -29,6 +29,8 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
+                @guest
+                @else
                 <ul class="navbar-nav me-auto">
                     <!-- Dropdown para Books -->
                     <li class="nav-item dropdown">
@@ -37,7 +39,9 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="booksDropdown">
                             <a class="dropdown-item" href="{{ route('books.index') }}">Listar Livros</a>
-                            <a class="dropdown-item" href="{{ route('books.create') }}">Adicionar Livro</a>
+                            @cannot('isCliente', Auth::user())
+                                <a class="dropdown-item" href="{{ route('books.create') }}">Adicionar Livro</a>
+                            @endcan
                         </div>
                     </li>
 
@@ -48,7 +52,9 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="authorsDropdown">
                             <a class="dropdown-item" href="{{ route('authors.index') }}">Listar Autores</a>
-                            <a class="dropdown-item" href="{{ route('authors.create') }}">Adicionar Autor</a>
+                            @cannot('isCliente', Auth::user())
+                                <a class="dropdown-item" href="{{ route('authors.create') }}">Adicionar Autor</a>
+                            @endcan
                         </div>
                     </li>
 
@@ -59,8 +65,10 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="categoriesDropdown">
                             <a class="dropdown-item" href="{{ route('categories.index') }}">Listar Categorias</a>
-                            <a class="dropdown-item" href="{{ route('categories.create') }}">Adicionar Categoria</a>
-                        </div>
+                            @cannot('isCliente', Auth::user())
+                                <a class="dropdown-item" href="{{ route('categories.create') }}">Adicionar Categoria</a>
+                            @endcan
+                            </div>
                     </li>
 
                     <!-- Dropdown para Publishers -->
@@ -70,15 +78,19 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="publishersDropdown">
                             <a class="dropdown-item" href="{{ route('publishers.index') }}">Listar Editoras</a>
-                            <a class="dropdown-item" href="{{ route('publishers.create') }}">Adicionar Editora</a>
+                            @cannot('isCliente', Auth::user())
+                                <a class="dropdown-item" href="{{ route('publishers.create') }}">Adicionar Editora</a>
+                            @endcan
                         </div>
                     </li>
                 </ul>
+                @endguest
 
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ms-auto">
                     <!-- Authentication Links -->
                     @guest
+                    
                         @if (Route::has('login'))
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -91,6 +103,7 @@
                             </li>
                         @endif
                     @else
+                    
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }}

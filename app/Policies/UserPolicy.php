@@ -8,21 +8,32 @@ class UserPolicy
 {
     
     
-    public function cliente(User $user): bool
+    public function isCliente(User $user): bool
     {
-        return $user->role === 3 ;
+        return $user->role == 3 ;
+
+    }
+
+    public function edit(User $user){
+
+
+        if ($user->role == 2 || $user->role == 1) {
+            return True;
+        }
+
+
     }
     
 
-    public function bibliotecario(User $user): bool
+    public function isBibliotecario(User $user): bool
     {
-        return $user->role === 2 ;
+        return $user->role == 2 ;
     }
 
 
-    public function admin(User $user): bool
+    public function isAdmin($user): bool
     {
-        return $user->role === 1 ;
+        return $user->role == 1 ;
     }
     /**
      * Create a new policy instance.
