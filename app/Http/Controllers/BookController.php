@@ -56,7 +56,9 @@ class BookController extends Controller
         $name = uniqid(date('HisYmd'));
         $extension = $request->images->getClientOriginalExtension();
         $nameFile = "{$name}.{$extension}";
-        $imagePath = $request->images->store($nameFile, 'public');
+        $imagePath = $request->file('images')->storeAs('imagens', $nameFile, 'public');
+
+
         
         if (!$imagePath) {
             
