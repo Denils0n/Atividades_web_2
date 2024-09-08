@@ -11,6 +11,7 @@
                 <span class="badge bg-secondary">{{ $category->name }}</span>
             @endforeach
         </p>
+        <p><img src="{{ asset('storage/' . $book->images) }}" alt="Imagem do Livro" width="100"></p>
         <a href="{{ route('books.index') }}" class="btn btn-primary">Voltar à Lista</a>
         @can(!'isCliente', Auth::user())
 
